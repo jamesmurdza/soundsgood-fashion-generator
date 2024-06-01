@@ -39,10 +39,13 @@ export default function AnalyzeImagePage() {
       reader.readAsDataURL(image);
       reader.onload = async () => {
         if (reader.result && typeof reader.result === 'string') {
+          const result = await generateText(reader.result, style);
           setGeneratedText(
-            await generateText(reader.result, style)
+            result
           );
-          const imageUrl = await generateImage("Big spooky monster.");
+          const imageUrl = await generateImage(
+            JSON.parse(result)["outfit_image_prompt"]
+          );
           setImageUrls([...imageUrls, imageUrl]);
         }
       };

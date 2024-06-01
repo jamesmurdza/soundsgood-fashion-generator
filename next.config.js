@@ -11,7 +11,16 @@ const nextConfig = {
         hostname: 'avatar.vercel.sh'
       }
     ]
-  }
+  },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/analyze',
+        permanent: true, // This flag indicates that the redirect is permanent (HTTP 301 status)
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

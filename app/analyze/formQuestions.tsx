@@ -1,11 +1,10 @@
-interface Question {
+export interface Question {
     id: number;
     type: 'dropdown' | 'textarea';
     text: string;
     options?: { label: string; icon?: string }[];
   }
   
-
 // Questions for QuestionsPage
 const questions: Question[] = [
     {

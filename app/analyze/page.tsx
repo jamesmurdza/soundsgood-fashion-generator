@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { useLoading } from '@/hooks/useLoading';
 import { generateText as generateTextSimple } from '@/lib/api';
 import { generateImage as generateImageSimple } from '@/lib/api';
-import questions from './formQuestions';
+import questions, { Question } from './formQuestions';
 
 interface QuestionsProps {
   questions: Question[];
@@ -85,10 +85,11 @@ export default function CombinedPage() {
   const [generateText, loading] = useLoading(generateTextSimple);
   const [generatedText, setGeneratedText] = useState('');
 
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [generateImage, imageLoading] = useLoading(generateImageSimple);
+  const [imageUrl, setImageUrl] = useState('');
 
   const [answers, setAnswers] = useState<Record<number, string>>({});
+  const [showForm, setShowForm] = useState(true);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -96,10 +97,12 @@ export default function CombinedPage() {
     if (event.target.files && event.target.files.length) {
       setImage(event.target.files[0]);
       setGeneratedText('');
+      setImageUrl('');
     }
   };
 
   const handleSubmit = async () => {
+    setShowForm(false);
     let result;
     if (image) {
       const reader = new FileReader();
@@ -108,18 +111,24 @@ export default function CombinedPage() {
         if (reader.result && typeof reader.result === 'string') {
           result = await generateText(reader.result, JSON.stringify(answers));
           setGeneratedText(result);
-          const imageUrl = await generateImage(JSON.parse(result)["outfit_image_prompt"]);
-          setImageUrls([...imageUrls, imageUrl]);
+          const imagePrompt = JSON.parse(result)["outfit_image_prompt"];
+          const imageUrl = await generateImage(imagePrompt);
+          setImageUrl(imageUrl);
         }
       };
     } else {
       result = await generateText(null, answers);
       setGeneratedText(result);
-      const imageUrl = await generateImage(JSON.parse(result)["outfit_image_prompt"]);
-      setImageUrls([...imageUrls, imageUrl]);
-
+      const imagePrompt = JSON.parse(result)["outfit_image_prompt"];
+      const imageUrl = await generateImage(imagePrompt);
+      setImageUrl(imageUrl);
     }
+  };
 
+  const handleBack = () => {
+    setShowForm(true);
+    setGeneratedText('');
+    setImageUrl('');
   };
 
   return (
@@ -127,21 +136,40 @@ export default function CombinedPage() {
       <div className="flex items-center">
         <h1 className="font-semibold text-lg md:text-2xl">Analyze Image</h1>
       </div>
-      <div>
-        <div className="w-full flex items-center mb-5 max-w-3xl mx-auto">
-        {image && <img src={URL.createObjectURL(image)} alt="Uploaded image" className="max-w-32 p-4" />}
-        <Input id="picture" type="file" onChange={handleImageUpload} />
-        </div>
-      </div>
-      <div className="flex flex-col items-center">
-        <Questions questions={questions} onSubmit={(answers) => {setAnswers(answers); handleSubmit()}} />
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {imageUrls.map((url, index) => (
-          <div key={index} className="w-full mb-4 text-center relative">
-            <img src={url} alt={`Generated ${index + 1}`} className="border rounded-sm border-input" />
+      {showForm && (
+        <div>
+          <div className="w-full flex items-center mb-5 max-w-3xl mx-auto">
+            {image && <img src={URL.createObjectURL(image)} alt="Uploaded image" className="max-w-32 p-4" />}
+            <Input id="picture" type="file" onChange={handleImageUpload} />
           </div>
-        ))}
+          <div className="flex flex-col items-center">
+            <Questions questions={questions} onSubmit={(answers) => { setAnswers(answers); handleSubmit() }} />
+          </div>
+        </div>
+      )}
+      {!showForm && (
+        <div className="flex justify-center mb-4">
+          <button
+            onClick={handleBack}
+            className="bg-blue-500 text-white font-bold py-2 px-4 rounded"
+          >
+            Back
+          </button>
+        </div>
+      )}
+      {loading && (
+        <div className="w-full mb-4 text-center relative">
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <Spinner />
+          </div>
+        </div>
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {imageUrl && (
+          <div className="w-full mb-4 text-center relative">
+            <img src={imageUrl} alt="Generated" className="border rounded-sm border-input" />
+          </div>
+        )}
         {imageLoading && (
           <div className="w-full mb-4 text-center relative">
             <div className="border border-input rounded-sm w-64 h-64 relative">
@@ -153,16 +181,8 @@ export default function CombinedPage() {
         )}
       </div>
       <div className="flex gap-6">
-          {loading ? (
-            <div className="w-full mb-4 text-center relative">
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <Spinner />
-              </div>
-            </div>
-          ) : (
-            generatedText && <p className="mt-4">{generatedText}</p>
-          )}
-        </div>
+        {generatedText && <p className="mt-4">{generatedText}</p>}
+      </div>
     </main>
   );
 }

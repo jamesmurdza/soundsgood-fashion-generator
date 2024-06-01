@@ -28,7 +28,13 @@ const Questions: React.FC<QuestionsProps> = ({ questions, onSubmit }) => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    onSubmit(answers);
+    const formattedAnswers = Object.fromEntries(
+      Object.entries(answers).map(([id, value]) => [
+        questions.find((q) => q.id === parseInt(id))?.text ?? 'Unknown Question',
+        value
+      ])
+    );
+    onSubmit(formattedAnswers);
   };
 
   return (

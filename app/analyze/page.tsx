@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { useLoading } from '@/hooks/useLoading';
 
 import { generateText as generateTextSimple } from '@/lib/api';
+import { generateImage as generateImageSimple } from '@/lib/api';
 
 export default function AnalyzeImagePage() {
   // State variables for image and generated text
@@ -17,6 +18,9 @@ export default function AnalyzeImagePage() {
   const [generateText, loading] = useLoading(generateTextSimple);
   const [generatedText, setGeneratedText] = useState('');
   const [style, setStyle] = useState('');
+
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [generateImage, imageLoading] = useLoading(generateImageSimple);
 
   // Function to handle image upload
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,6 +42,8 @@ export default function AnalyzeImagePage() {
           setGeneratedText(
             await generateText(reader.result, style)
           );
+          const imageUrl = await generateImage("Big spooky monster.");
+          setImageUrls([...imageUrls, imageUrl]);
         }
       };
     }
@@ -91,6 +97,29 @@ export default function AnalyzeImagePage() {
             generatedText && <p className="mt-4">{generatedText}</p>
           )}
         </div>
+      </div>
+        {/* Grid to display generated images */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Map over image URLs and display images */}
+        {imageUrls.map((url, index) => (
+          <div key={index} className="w-full mb-4 text-center relative">
+            <img
+              src={url}
+              alt={`Generated ${index + 1}`}
+              className="border rounded-sm border-input"
+            />
+          </div>
+        ))}
+        {/* Display loading spinner while generating images */}
+        {imageLoading && (
+          <div className="w-full mb-4 text-center relative">
+            <div className="border border-input rounded-sm w-64 h-64 relative">
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <Spinner />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </main>
   );

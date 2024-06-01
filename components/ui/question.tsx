@@ -32,14 +32,15 @@ const Questions: React.FC<QuestionsProps> = ({ questions, onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="max-w-lg mx-auto">
       {questions.map((question) => (
-        <div key={question.id} className="question-container">
-          <label>{question.text}</label>
+        <div key={question.id} className="mb-6">
+          <label className="block mb-2">{question.text}</label>
           {question.type === 'dropdown' && question.options ? (
             <select
               value={answers[question.id] || ''}
               onChange={(e) => handleChange(question.id, e.target.value)}
+              className="block w-full border border-gray-300 rounded px-3 py-2"
             >
               <option value="" disabled>
                 Select an option
@@ -55,11 +56,17 @@ const Questions: React.FC<QuestionsProps> = ({ questions, onSubmit }) => {
               value={answers[question.id] || ''}
               onChange={(e) => handleChange(question.id, e.target.value)}
               placeholder="Your answer"
+              className="block w-full border border-gray-300 rounded px-3 py-2"
             />
           )}
         </div>
       ))}
-      <button type="submit">Submit</button>
+      <button
+        type="submit"
+        className="bg-blue-500 text-white font-bold py-2 px-4 rounded"
+      >
+        Submit
+      </button>
     </form>
   );
 };

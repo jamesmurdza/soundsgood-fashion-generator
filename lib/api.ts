@@ -1,11 +1,11 @@
-async function generateResource(endpoint: string, input: any) {
+async function generateResource(endpoint: string, input: any, style?: any) {
   // Fetch data from the specified API endpoint
   const response = await fetch(`/api/generate/${endpoint}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ input })
+    body: JSON.stringify({ input, style })
   });
 
   // If the response is not successful, throw an error
@@ -27,8 +27,8 @@ export async function generateImage(input: any) {
 }
 
 // Function to generate text based on an image
-export async function generateText(image: string) {
+export async function generateText(image: string, style: string) {
   // Call generateResource function with 'text' endpoint
   // and return the generatedText property from the response
-  return (await generateResource('text', image)).generatedText;
+  return (await generateResource('text', image, style)).generatedText;
 }

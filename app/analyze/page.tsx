@@ -16,6 +16,7 @@ export default function AnalyzeImagePage() {
   const [image, setImage] = useState<File | null>(null);
   const [generateText, loading] = useLoading(generateTextSimple);
   const [generatedText, setGeneratedText] = useState('');
+  const [style, setStyle] = useState('');
 
   // Function to handle image upload
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +36,7 @@ export default function AnalyzeImagePage() {
       reader.onload = async () => {
         if (reader.result && typeof reader.result === 'string') {
           setGeneratedText(
-            await generateText(reader.result)
+            await generateText(reader.result, style)
           );
         }
       };
@@ -46,6 +47,15 @@ export default function AnalyzeImagePage() {
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <div className="flex items-center">
         <h1 className="font-semibold text-lg md:text-2xl">Analyze Image</h1>
+      </div>
+      <div>
+      <Input
+          type="text"
+          value={style}
+          onChange={(e) => setStyle(e.target.value)}
+          placeholder="What's your desired style?"
+          className="px-4 py-2 border rounded-md flex-grow"
+        />
       </div>
       <div>
         <div className="w-full flex items-center mb-5">

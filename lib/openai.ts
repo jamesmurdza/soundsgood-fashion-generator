@@ -58,10 +58,6 @@ export async function generateText({ prompt, image }: { prompt: string; image?: 
     },
   ];
 
-  if (image) {
-    messages[0].content = [{ type: 'image_url', image_url: { url: image } }];
-  }
-
   const payload = {
     model: 'gpt-4-turbo',
     messages,

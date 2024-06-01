@@ -181,7 +181,18 @@ export default function CombinedPage() {
         )}
       </div>
       <div className="flex gap-6">
-        {generatedText && <p className="mt-4">{generatedText}</p>}
+      {generatedText && (
+              <table>
+              <tbody>
+                {Object.entries(JSON.parse(generatedText)).map(([key, value]) => (
+                  <tr key={key}>
+                    <td>{key}</td>
+                    <td>{"" + value}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>      
+      )}
       </div>
     </main>
   );

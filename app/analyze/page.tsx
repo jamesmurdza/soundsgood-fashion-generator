@@ -106,7 +106,7 @@ export default function CombinedPage() {
       reader.readAsDataURL(image);
       reader.onload = async () => {
         if (reader.result && typeof reader.result === 'string') {
-          result = await generateText(reader.result, answers);
+          result = await generateText(reader.result, JSON.stringify(answers));
           setGeneratedText(result);
           const imageUrl = await generateImage(JSON.parse(result)["outfit_image_prompt"]);
           setImageUrls([...imageUrls, imageUrl]);

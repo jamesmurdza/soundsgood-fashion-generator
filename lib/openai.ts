@@ -61,7 +61,8 @@ export async function generateText({ prompt, image }: { prompt: string; image?: 
   const payload = {
     model: 'gpt-4-turbo',
     messages,
-    max_tokens: 300,
+    max_tokens: 1000,
+    response_format: { type: "json_object" }
   };
 
   const { choices } = await fetchOpenAI<OpenAIChatResponse>('chat/completions', payload);

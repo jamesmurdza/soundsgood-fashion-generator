@@ -36,38 +36,36 @@ const Questions: React.FC<QuestionsProps> = ({ questions, onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
+    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
       {questions.map((question) => (
-        <div key={question.id} className="mb-6">
-          <label className="block mb-2 text-bold">{question.text}</label>
+        <div key={question.id} className="mb-8">
+          <label className="block mb-4 text-lg font-semibold text-teal-700">
+            {question.text}
+          </label>
           {question.type === 'dropdown' && question.options ? (
-            <div className="flex flex-wrap -mx-2 text-semibold">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               {question.options.map((option, index) => (
-                <div className="flex-1 px-2 mb-4 sm:mb-3 sm:flex-none sm:w-1/2 lg:w-1/4 xl:w-1/4">
-                  <label
-                    key={index}
-                    className={`w-full border p-2 rounded cursor-pointer bg-stone-100 ${
-                      answers[question.id] === option.label
-                        ? 'bg-blue-100 border-black border-4'
-                        : 'bg-white border-black border-3'
-                    } flex flex-col items-center space-y-2`}
-                  >
-                    <input
-                      type="radio"
-                      name={`question-${question.id}`}
-                      value={option.label}
-                      checked={answers[question.id] === option.label}
-                      onChange={(e) =>
-                        handleChange(question.id, e.target.value)
-                      }
-                      className="hidden"
-                    />
-                    {option.icon && (
-                      <span className="icon text-xl">{option.icon}</span>
-                    )}
-                    <span className="pb-1 px-2">{option.label}</span>
-                  </label>
-                </div>
+                <label
+                  key={index}
+                  className={`flex flex-col items-center space-y-2 p-3 rounded-lg cursor-pointer transition-colors duration-300 ${
+                    answers[question.id] === option.label
+                      ? 'bg-orange-500 text-white'
+                      : 'bg-white border-2 border-orange-500 text-orange-500 hover:bg-orange-100'
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name={`question-${question.id}`}
+                    value={option.label}
+                    checked={answers[question.id] === option.label}
+                    onChange={(e) => handleChange(question.id, e.target.value)}
+                    className="hidden"
+                  />
+                  {option.icon && (
+                    <span className="text-2xl">{option.icon}</span>
+                  )}
+                  <span className="text-sm font-medium">{option.label}</span>
+                </label>
               ))}
             </div>
           ) : (
@@ -75,14 +73,14 @@ const Questions: React.FC<QuestionsProps> = ({ questions, onSubmit }) => {
               value={answers[question.id] || ''}
               onChange={(e) => handleChange(question.id, e.target.value)}
               placeholder="Your answer"
-              className="block w-full border border-black  rounded px-3 py-2 "
+              className="block w-full border-2 border-teal-500 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-600"
             />
           )}
         </div>
       ))}
       <button
         type="submit"
-        className="bg-blue-500 text-white font-bold py-2 px-4 rounded"
+        className="bg-purple-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300 hover:bg-purple-700"
       >
         Submit
       </button>
@@ -142,25 +140,36 @@ export default function CombinedPage() {
   };
 
   return (
-    <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6 bg-gradient-to-br from-green-300 to-blue-400 justify-center items-center">
-      <div className="flex items-center">
-        <h1 className="font-semibold text-lg md:text-4xl">
-          Find Your Perfect Look !
-        </h1>
-      </div>
-      {showForm && (
-        <div>
-          <div className="w-full flex items-center mb-5 max-w-3xl mx-auto ">
-            {image && (
-              <img
-                src={URL.createObjectURL(image)}
-                alt="Uploaded image"
-                className="max-w-32 p-4"
-              />
-            )}
-            <Input id="picture" type="file" onChange={handleImageUpload} />
-          </div>
-          <div className="flex flex-col items-center">
+    <main className="min-h-screen bg-gradient-to-br from-purple-200 to-teal-300">
+      <div className="max-w-6xl mx-auto px-4 py-12">
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-bold text-purple-800 mb-4">
+            Find Your Perfect Look
+          </h1>
+          <p className="text-xl text-teal-700">
+            Answer a few questions and let us help you find the perfect outfit!
+          </p>
+        </div>
+        {showForm && (
+          <div>
+            <div className="mb-8">
+              <label
+                htmlFor="picture"
+                className="block mb-2 text-lg font-semibold text-teal-700"
+              >
+                Upload an image (optional)
+              </label>
+              <div className="flex items-center">
+                {image && (
+                  <img
+                    src={URL.createObjectURL(image)}
+                    alt="Uploaded image"
+                    className="w-32 h-32 object-cover rounded-lg mr-4"
+                  />
+                )}
+                <Input id="picture" type="file" onChange={handleImageUpload} />
+              </div>
+            </div>
             <Questions
               questions={questions}
               onSubmit={(answers) => {
@@ -169,68 +178,59 @@ export default function CombinedPage() {
               }}
             />
           </div>
-        </div>
-      )}
-      {!showForm && (
-        <div className="flex justify-center mb-4">
-          <button
-            onClick={handleBack}
-            className="bg-blue-500 text-white font-bold py-2 px-4 rounded"
-          >
-            Back
-          </button>
-        </div>
-      )}
-      {loading && (
-        <div className="w-full mb-4 text-center relative flex justify-center">
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        )}
+        {!showForm && (
+          <div className="text-center mb-8">
+            <button
+              onClick={handleBack}
+              className="bg-orange-500 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-300 hover:bg-orange-600"
+            >
+              Back
+            </button>
+          </div>
+        )}
+        {loading && (
+          <div className="flex justify-center mb-8">
             <Spinner />
           </div>
-        </div>
-      )}
-      <div className="grid grid-cols-1 md:grid-cols-1 gap-4 ">
-        {imageUrl && (
-          <div className="w-full mb-4 text-center relative flex justify-center ">
-            <div className="border border-white rounded-xl p-3 bg-white ">
+        )}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {imageUrl && (
+            <div className="relative">
               <img
                 src={imageUrl}
-                alt="Generated"
-                className="border rounded-sm border-input"
+                alt="Generated outfit"
+                className="w-full h-auto rounded-lg shadow-lg"
               />
             </div>
-          </div>
-        )}
-        {imageLoading && (
-          <div className="w-full mb-4 text-center relative flex justify-center">
-            <div className="border border-input rounded-sm w-64 h-64 relative">
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <Spinner />
-              </div>
+          )}
+          {imageLoading && (
+            <div className="flex justify-center items-center">
+              <Spinner />
             </div>
-          </div>
-        )}
-      </div>
-      <div className="flex gap-6">
-        {generatedText && (
-          <table className="  border-2 border-black rounded-lg ">
-            <tbody>
-              {Object.entries(JSON.parse(generatedText)).map(([key, value]) => (
-                <tr key={key}>
-                  <td
-                    style={{
-                      fontWeight: 'bold',
-                      paddingRight: '15px',
-                      paddingLeft: '15px'
-                    }}
-                  >
-                    {key}
-                  </td>
-                  <td>{'' + value}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+          )}
+          {generatedText && (
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h2 className="text-2xl font-semibold text-purple-800 mb-4">
+                Outfit Details
+              </h2>
+              <table className="w-full">
+                <tbody>
+                  {Object.entries(JSON.parse(generatedText)).map(
+                    ([key, value]) => (
+                      <tr key={key} className="border-b border-purple-200">
+                        <td className="py-2 font-semibold text-teal-700">
+                          {key}
+                        </td>
+                        <td className="py-2 text-purple-600">{'' + value}</td>
+                      </tr>
+                    )
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       </div>
     </main>
   );

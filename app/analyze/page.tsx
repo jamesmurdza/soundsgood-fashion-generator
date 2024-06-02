@@ -150,7 +150,7 @@ export default function CombinedPage() {
       </div>
       {showForm && (
         <div>
-          <div className="w-full flex items-center mb-5 max-w-3xl mx-auto">
+          <div className="w-full flex items-center mb-5 max-w-3xl mx-auto ">
             {image && (
               <img
                 src={URL.createObjectURL(image)}
@@ -190,7 +190,7 @@ export default function CombinedPage() {
       )}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {imageUrl && (
-          <div className="w-full mb-4 text-center relative">
+          <div className="w-full mb-4 text-center relative flex justify-center ">
             <img
               src={imageUrl}
               alt="Generated"

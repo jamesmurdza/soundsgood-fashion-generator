@@ -111,27 +111,31 @@ export default function CombinedPage() {
 
   const handleSubmit = async () => {
     setShowForm(false);
-    let result;
+  
+    const processResult = async (imageData: any) => {
+      const result = await generateText(imageData, JSON.stringify(answers));
+      setGeneratedText(result);
+      // @ts-ignore
+      const gender = answers["What is your gender?"];
+      const imagePrompt = JSON.parse(result)['outfit_image_prompt'];
+      const imageUrl = await generateImage(`${imagePrompt}. Use a ${gender} model for the image.`);
+      console.log(`${imagePrompt}\n Use a ${gender} model for the image.`);
+      setImageUrl(imageUrl);
+    };
+  
     if (image) {
       const reader = new FileReader();
-      reader.readAsDataURL(image);
-      reader.onload = async () => {
-        if (reader.result && typeof reader.result === 'string') {
-          result = await generateText(reader.result, JSON.stringify(answers));
-          setGeneratedText(result);
-          const imagePrompt = JSON.parse(result)['outfit_image_prompt'];
-          const imageUrl = await generateImage(imagePrompt, answers);
-          setImageUrl(imageUrl);
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          processResult(reader.result);
         }
       };
+      reader.readAsDataURL(image);
     } else {
-      result = await generateText(null, answers);
-      setGeneratedText(result);
-      const imagePrompt = JSON.parse(result)['outfit_image_prompt'];
-      const imageUrl = await generateImage(imagePrompt);
-      setImageUrl(imageUrl);
+      processResult(null);
     }
   };
+  
 
   const handleBack = () => {
     setShowForm(true);

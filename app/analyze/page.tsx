@@ -144,7 +144,9 @@ export default function CombinedPage() {
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6 bg-gradient-to-br from-green-300 to-blue-400 justify-center items-center">
       <div className="flex items-center">
-        <h1 className="font-semibold text-lg md:text-4xl">Analyze Image</h1>
+        <h1 className="font-semibold text-lg md:text-4xl">
+          Find Your Perfect Look !
+        </h1>
       </div>
       {showForm && (
         <div>

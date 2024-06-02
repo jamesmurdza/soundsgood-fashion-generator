@@ -75,7 +75,7 @@ const Questions: React.FC<QuestionsProps> = ({ questions, onSubmit }) => {
               value={answers[question.id] || ''}
               onChange={(e) => handleChange(question.id, e.target.value)}
               placeholder="Your answer"
-              className="block w-full border border-gray-300 rounded px-3 py-2 "
+              className="block w-full border border-black  rounded px-3 py-2 "
             />
           )}
         </div>

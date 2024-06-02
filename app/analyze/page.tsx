@@ -46,7 +46,7 @@ const Questions: React.FC<QuestionsProps> = ({ questions, onSubmit }) => {
                 <div className="flex-1 px-2 mb-4 sm:mb-3 sm:flex-none sm:w-1/2 lg:w-1/4 xl:w-1/4">
                   <label
                     key={index}
-                    className={`w-full border p-2 rounded cursor-pointer bg-yellow-200 ${
+                    className={`w-full border p-2 rounded cursor-pointer bg-stone-100 ${
                       answers[question.id] === option.label
                         ? 'bg-blue-100 border-black border-4'
                         : 'bg-white border-black border-3'

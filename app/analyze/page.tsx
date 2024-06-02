@@ -182,24 +182,26 @@ export default function CombinedPage() {
         </div>
       )}
       {loading && (
-        <div className="w-full mb-4 text-center relative">
+        <div className="w-full mb-4 text-center relative flex justify-center">
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
             <Spinner />
           </div>
         </div>
       )}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-1 gap-4 ">
         {imageUrl && (
           <div className="w-full mb-4 text-center relative flex justify-center ">
-            <img
-              src={imageUrl}
-              alt="Generated"
-              className="border rounded-sm border-input"
-            />
+            <div className="border border-white rounded-xl p-3 bg-white ">
+              <img
+                src={imageUrl}
+                alt="Generated"
+                className="border rounded-sm border-input"
+              />
+            </div>
           </div>
         )}
         {imageLoading && (
-          <div className="w-full mb-4 text-center relative">
+          <div className="w-full mb-4 text-center relative flex justify-center">
             <div className="border border-input rounded-sm w-64 h-64 relative">
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 <Spinner />
@@ -210,11 +212,19 @@ export default function CombinedPage() {
       </div>
       <div className="flex gap-6">
         {generatedText && (
-          <table>
+          <table className="  border-2 border-black rounded-lg ">
             <tbody>
               {Object.entries(JSON.parse(generatedText)).map(([key, value]) => (
                 <tr key={key}>
-                  <td>{key}</td>
+                  <td
+                    style={{
+                      fontWeight: 'bold',
+                      paddingRight: '15px',
+                      paddingLeft: '15px'
+                    }}
+                  >
+                    {key}
+                  </td>
                   <td>{'' + value}</td>
                 </tr>
               ))}

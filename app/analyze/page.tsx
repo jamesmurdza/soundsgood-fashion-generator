@@ -109,12 +109,13 @@ export default function CombinedPage() {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (answers: any) => {
     setShowForm(false);
   
     const processResult = async (imageData: any) => {
       const result = await generateText(imageData, JSON.stringify(answers));
       setGeneratedText(result);
+      console.log(answers);
       // @ts-ignore
       const gender = answers["What is your gender?"];
       const imagePrompt = JSON.parse(result)['outfit_image_prompt'];
@@ -178,7 +179,7 @@ export default function CombinedPage() {
               questions={questions}
               onSubmit={(answers) => {
                 setAnswers(answers);
-                handleSubmit();
+                handleSubmit(answers);
               }}
             />
           </div>

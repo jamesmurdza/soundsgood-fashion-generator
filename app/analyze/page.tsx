@@ -112,7 +112,7 @@ export default function CombinedPage() {
           result = await generateText(reader.result, JSON.stringify(answers));
           setGeneratedText(result);
           const imagePrompt = JSON.parse(result)["outfit_image_prompt"];
-          const imageUrl = await generateImage(imagePrompt);
+          const imageUrl = await generateImage(imagePrompt, answers);
           setImageUrl(imageUrl);
         }
       };
